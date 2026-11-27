@@ -166,15 +166,14 @@ class TSTiEncoder(nn.Module):  #i means channel-independent
 
         #this is where the channels become independant
         #combines batch size and number of variables
+        #I also got rid of the reshape
         #seg_num/patch num, bs, and d_model seem to be the same between models
-        #TESTING IDEA of getting rid of reshaping altogether and just using x
         #u = torch.reshape(x, (x.shape[0]*x.shape[1],x.shape[2],x.shape[3]))      # u: [bs * nvars x patch_num x d_model]
         x = self.dropout(x + self.W_pos)                                         # u: [bs * nvars x patch_num x d_model]
 
         # Encoder
         #ALTERED CODE
-        #I moved the reshape to before the encoder, this way the shape matches what TSAL expects
-        #also means it needs to use u not z
+        #I got rid of the reshape altogether
         #z = torch.reshape(u, (-1,n_vars,u.shape[-2],u.shape[-1]))                # z: [bs x nvars x patch_num x d_model]
         x = self.encoder(x)                                                      # z: [bs x nvars x patch_num x d_model]
         z = x.permute(0,1,3,2)                                                   # z: [bs x nvars x d_model x patch_num]
@@ -479,15 +478,17 @@ class _ScaledDotProductAttention(nn.Module):
 
         # Add pre-softmax attention scores from the previous layer (optional)
         if prev is not None: 
-            print("attention scores", attn_scores.shape, "prev", prev.shape)
-            attn_scores = attn_scores + prev
+            #print("attention scores", attn_scores.shape, "prev", prev.shape)
+            if(attn_scores.shape == prev.shape):
+                attn_scores = attn_scores + prev
 
         # Attention mask (optional)
         if attn_mask is not None:                                     # attn_mask with shape [q_len x seq_len] - only used when q_len == seq_len
             if attn_mask.dtype == torch.bool:
                 attn_scores.masked_fill_(attn_mask, -np.inf)
             else:
-                attn_scores += attn_mask
+                if(attn_scores.shape == attn_mask.shape):
+                    attn_scores += attn_mask
 
         # Key padding mask (optional)
         if key_padding_mask is not None:                              # mask with shape [bs x q_len] (only when max_w_len == q_len)
