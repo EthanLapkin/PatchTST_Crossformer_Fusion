@@ -461,7 +461,8 @@ class Dataset_Crossformer_Fusion(Dataset):
         tokenizer.fit_on_texts(df_model)
         tokenizer.update(df_task_type)
         tokenizer.update(df_node)
-        tokenizer.save(path=(self.root_path + "/vocabs/tokenizer.json"))
+        #needed to remove this line to deal with kaggle
+        #tokenizer.save(path=(self.root_path + "/vocabs/tokenizer.json"))
         df_model = tokenizer.texts_to_sequences(df_model, include_start_end=False)
         df_task_type = tokenizer.texts_to_sequences(df_task_type, include_start_end=False)
         df_node = tokenizer.texts_to_sequences(df_node, include_start_end=False)
