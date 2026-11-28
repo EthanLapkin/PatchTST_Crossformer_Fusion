@@ -9,7 +9,10 @@ fi
 seq_len=336
 model_name=PatchTST
 
-root_path_name=./dataset/
+# root_path_name=./dataset/
+# data_path_name=nlr_data_cleaned.csv
+#changed this to work with google colab
+root_path_name=/content/drive/MyDrive/datasets/
 data_path_name=nlr_data_cleaned.csv
 model_id_name=NLR
 data_name=NLR
