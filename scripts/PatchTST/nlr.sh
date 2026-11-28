@@ -29,7 +29,7 @@ do
       --seq_len $seq_len \
       --pred_len $pred_len \
       --embed timeF \
-      --target gpu0_mW \
+      --target cpu1_core_W \
       --enc_in 7 \
       --e_layers 3 \
       --n_heads 4 \
